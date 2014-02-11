@@ -24,6 +24,8 @@
 		$presentations = array();
 		$slides = array();
 		
+		$records = array();
+		
 		while ($row = $results->fetchArray()) {
 			$presentation_id = $row['id'];
 			
