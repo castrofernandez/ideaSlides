@@ -1,0 +1,1 @@
+CREATE TABLE presentations (id INTEGER PRIMARY KEY,title TEXT,description TEXT,sort INTEGER)CREATE TABLE slides (id INTEGER PRIMARY KEY,title TEXT,category TEXT,body TEXT,code TEXT,presentation INTEGER,sort INTEGER,FOREIGN KEY(presentation) REFERENCES presentations(id))

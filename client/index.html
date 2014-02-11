@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<title>ideaSlides</title>
+		<link href='http://fonts.googleapis.com/css?family=Lily+Script+One|Raleway|Audiowide|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="static/css/font-awesome.min.css">
+		<link rel="stylesheet" href="static/css/normalize.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+	<body>
+		<script type="text/x-handlebars">
+			<nav class="top-bar">
+		    	<h1 class="highlighted"><i class="fa fa-lightbulb-o"></i> ideaSlides</h1>
+		    	<ul class="nav">
+		    		<a href="" class="twitter"><i class="fa fa-twitter fa-2x"></i></a>
+			    	<li {{bind-attr class="isEditing:selected"}}><a {{ action "edition" }}>edición</a></li>
+			    	<li {{bind-attr class="isPreviewing:selected"}}><a {{ action "preview" }}>vista</a></li>
+			    </ul>
+			</nav>
+			
+			{{outlet}}
+		</script>
+
+		<script type="text/x-handlebars" data-template-name="presentations">
+	    	<div class="content">
+		    	<nav class="presentation-bar">
+		    		<span class="total-presentaciones">Total: {{total}} presentaciones</span>
+		    		<div class="presentation-select">
+						{{view Ember.Select 
+							id="presentationSelector"
+							viewName="select"
+			                contentBinding="content"
+			                optionLabelPath="content.title"
+			                optionValuePath="content.id"
+			                prompt="Seleccione presentación"
+			                valueBinding="presentation"}}
+		    		</div>
+		    		{{#if isEditing}}
+		    			{{#link-to 'presentations.new' class="new-presentation"}}<i class="fa fa-video-camera"></i> Nueva{{/link-to}}
+		    			<button class="edit-presentation" {{action "editPresentation"}}><i class="fa fa-edit"></i> Editar</button>
+		    		{{/if}}
+			    </nav>
+			    {{outlet}}
+		    </div>		
+		</script>
+
+		<script type="text/x-handlebars" data-template-name="presentation">
+	    	<aside class="slide-list">
+	    		{{#if isEditing}}
+	    			<span class="total">Total: {{slides.length}} diapositivas</span>
+	    			{{#link-to 'slides.new' class="new-slide"}}<i class="fa fa-edit"></i> Nueva diapositiva{{/link-to}}
+	    		{{/if}}
+			    <ul>
+					{{#each slide in slides}}
+						<li {{bind-attr class="slide.isShown:shown"}}>
+							{{#link-to 'presentation.slide' slide}}<span class="number">{{slide.number}}|</span> {{slide.title}}{{/link-to}}
+						</li>
+					{{/each}}
+				</ul>
+		    </aside>
+		    <div class="slide">
+		    	{{outlet}}
+		    </div>		
+		</script>
+
+		<script type="text/x-handlebars" data-template-name="presentation/slide">
+			{{#if isEditing}}
+				{{partial 'slide_edit'}}
+				
+				<button {{action "save"}} class="save-button">Guardar</button>
+				<button {{action "delete"}} class="delete-button">Borrar</button>
+			{{/if}}
+			<div class="preview">
+				<nav>
+					{{#if isEditing}}
+						<p class="highlighted"><i class="fa fa-search"></i> vista previa</p>
+					{{else}}
+						<div class="progress">
+							<div id="progressBar" class="bar stripes" {{bind-attr style="percentStyle"}}>
+								<span>{{percent}} %</span>
+							</div>
+						</div>
+					{{/if}}
+					{{#if category}}
+						<span class="category">{{category}}</span> 
+						<span class="title before-title">{{title}}</span>
+					{{else}}
+						<span class="title">{{title}}</span>
+					{{/if}}
+				</nav>
+				<div>
+					{{markdown body}}
+				</div>
+				{{#if isPreviewing}}
+					<footer>
+						{{#if previous}}
+							{{#link-to 'presentation.slide' this.previous class="selector-active"}}
+								<i class="fa fa-caret-left fa-lg"></i>
+							{{/link-to}}
+						{{else}}
+							<i class="fa fa-caret-left fa-lg selector"></i>
+						{{/if}}
+						<span class="number">{{number}}</span>
+						{{#if next}}
+							{{#link-to 'presentation.slide' this.next class="selector-active"}}
+								<i class="fa fa-caret-right fa-lg"></i>
+							{{/link-to}}
+						{{else}}
+							<i class="fa fa-caret-right fa-lg selector"></i>
+						{{/if}}
+					</footer>
+				{{/if}}
+			</div>
+		</script>
+
+		<script type="text/x-handlebars" data-template-name="slides">
+			{{outlet}}
+		</script>
+
+		<script type="text/x-handlebars" data-template-name="slides/new">
+			<div class="presentation-edit inputs">
+				<form {{action save on='submit'}}>
+					<label for="title">Título</label>
+					{{view Ember.TextField name='title' valueBinding='title'}}
+					<label for="category">Categoría</label>
+					{{view Ember.TextField name='category' valueBinding='category'}}
+					<label for="body">Cuerpo</label>
+					{{view Ember.TextArea name='body' valueBinding='body'}}
+					<label for="code">Código fuente</label>
+					{{view Ember.TextArea name='code' valueBinding='code'}}
+					<label for="sort">Orden</label>
+					{{view Ember.TextField name='sort' valueBinding='sort'}}
+					<button type="submit" class="save-button">Guardar</button>
+				</form>
+			</div>
+		</script>
+
+		<script type="text/x-handlebars" data-template-name="presentations/new">
+			<div class="presentation-edit inputs">
+				<form {{action save on='submit'}}>
+					<label for="title">Título</label>
+					{{view Ember.TextField name='title' valueBinding='title'}}
+					<label for="description">Descripción</label>
+					{{view Ember.TextField name='description' valueBinding='description'}}
+					<label for="sort">Orden</label>
+					{{view Ember.TextField name='sort' valueBinding='sort'}}
+					
+					<button type="submit" class="save-button">Guardar</button>
+				</form>
+			</div>
+		</script>
+		
+		<script type="text/x-handlebars" data-template-name="presentation/edit">
+			<div class="presentation-edit inputs">
+				<label for="title">Título</label>
+				{{view Ember.TextField name='title' valueBinding='title'}}
+				<label for="description">Descripción</label>
+				{{view Ember.TextField name='description' valueBinding='description'}}
+				<label for="sort">Orden</label>
+				{{view Ember.TextField name='sort' valueBinding='sort'}}
+					
+				<button {{action "save"}} class="save-button">Guardar</button>
+				<button {{action "delete"}} class="delete-button">Borrar</button>
+			</div>
+		</script>
+		
+		<script type="text/x-handlebars" data-template-name="slide_edit">
+			<div class="inputs">
+				<label for="title">Título</label>
+				{{view Ember.TextField name='title' valueBinding='title' focus-out="acceptChanges" insert-newline="acceptChanges"}}
+				<label for="category">Categoría</label>
+				{{view Ember.TextField name='category' valueBinding='category' focus-out="acceptChanges" insert-newline="acceptChanges"}}
+				<label for="body">Cuerpo</label>
+				{{view Ember.TextArea name='body' valueBinding='body' focus-out="acceptChanges"}}
+				<label for="code">Código fuente</label>
+				{{view Ember.TextArea name='code' valueBinding='code' focus-out="acceptChanges"}}
+				<label for="sort">Orden</label>
+				{{view Ember.TextField name='sort' valueBinding='sort' focus-out="acceptChanges"}}
+			</div>
+		</script>
+
+		<script src="js/libs/jquery-1.9.1.js"></script>
+		<script src="js/libs/handlebars.js"></script>
+		<script src="js/libs/ember.js"></script>
+		<script src="js/libs/ember-data.js"></script>
+		<script src="js/libs/showdown.js"></script>	
+		<script src="js/app.js"></script>
+		<script src="js/libs/prettify/prettify.js"></script>
+		<script src="js/libs/prettify/lang-css.js"></script>
+	</body>
+</html>
