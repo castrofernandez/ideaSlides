@@ -257,6 +257,11 @@
 		$sort = $slide['sort'];
 		
 		$db = new SQLite3("../data/" . "slides.db");
+		
+		if (empty($sort)) {			
+			$slide = $db->query("SELECT (SELECT count(*) FROM slides b  WHERE a.id >= b.id) AS number FROM slides a WHERE id = $id");
+			$sort = $slide['number'];
+		}
 	
 		$db->exec("UPDATE slides SET title = '$title', category = '$category', body = '$body', code = '$code', sort = $sort WHERE id = $id");
 	});
