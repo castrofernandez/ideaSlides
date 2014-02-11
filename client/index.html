@@ -7,6 +7,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Lily+Script+One|Raleway|Audiowide|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="static/css/font-awesome.min.css">
 		<link rel="stylesheet" href="static/css/normalize.css">
+		<link rel="stylesheet" href="static/css/prettify.css">
 		<link rel="stylesheet" href="static/css/style.css">
 	</head>
 	<body>
@@ -90,8 +91,8 @@
 						<span class="title">{{title}}</span>
 					{{/if}}
 				</nav>
-				<div>
-					{{markdown body}}
+				<div class="body">
+					{{{markdown body}}}
 				</div>
 				{{#if isPreviewing}}
 					<footer>

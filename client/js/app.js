@@ -171,11 +171,6 @@ IdeaSlides.PresentationSlideRoute = Ember.Route.extend({
 		
 		// Prettify source code
 		Ember.run.scheduleOnce('afterRender', this, function() {
-		/*	var elements = document.querySelectorAll('div.preview pre');
-		
-			for (var i = 0; i < elements.length; i++)
-				elements[i].className = "prettyprint linenums lang-css";
-			*/	
 			prettyPrint();
 		});
 	}

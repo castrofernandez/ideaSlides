@@ -342,9 +342,18 @@ div.slide label {
 div.preview {
 	clear: both;
 	width: 100%;
-	min-height: 30em;
+	min-height: 28em;
 	padding-bottom: 6em;
 	position: relative;
+}
+
+div.preview div.body {
+	font-size: 1.4em;
+	line-height: 2em;
+}
+
+div.preview div.body ul {
+	padding-left: 1em;
 }
 
 p.highlighted {
