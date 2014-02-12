@@ -26,15 +26,16 @@
 		
 		$records = array();
 		
+		$i = 0;	
+		
 		while ($row = $results->fetchArray()) {
 			$presentation_id = $row['id'];
 			
-			$r = $db->query("SELECT *, (SELECT count(*) FROM slides b  WHERE a.id >= b.id AND presentation = $presentation_id) AS number, (SELECT count(id) FROM slides WHERE presentation = $presentation_id) AS total FROM slides a WHERE presentation = $presentation_id ORDER BY sort, id");
+			$r = $db->query("SELECT *, (SELECT count(*) FROM slides b  WHERE a.id >= b.id AND presentation = $presentation_id) AS number, (SELECT count(id) FROM slides WHERE presentation = $presentation_id) AS total FROM slides a WHERE presentation = $presentation_id ORDER BY presentation, sort, id");
 			
 			$ids = array();
 			
 			$previous_slide = null;
-			$i = 0;	
 			
 			while ($s = $r->fetchArray()) {
 				$s['previous'] = $previous_slide['id'];
@@ -160,7 +161,7 @@
 	$app->get('/slides', function () {
 		$db = new SQLite3("../data/" . "slides.db");
 		
-		$results = $db->query("SELECT *, (SELECT count(*) FROM slides b  WHERE a.id >= b.id) AS number, (SELECT count(id) FROM slides) AS total FROM slides a ORDER BY sort, id");
+		$results = $db->query("SELECT *, (SELECT count(*) FROM slides b  WHERE a.id >= b.id) AS number, (SELECT count(id) FROM slides) AS total FROM slides a ORDER BY presentation, sort, id");
 
 		$records = array();
 		
